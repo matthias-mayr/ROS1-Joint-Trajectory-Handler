@@ -58,6 +58,9 @@ class joint_trajectory_recorder:
         exit(0)
 
     def record(self):
+        while None in self.joint_state:
+            rospy.loginfo_once("Waiting for all joint values to be set.")
+            rospy.sleep(0.001)
         self.recording = True
         self.start_ros_time = rospy.get_rostime()
         self.start_wall_time = datetime.now()
