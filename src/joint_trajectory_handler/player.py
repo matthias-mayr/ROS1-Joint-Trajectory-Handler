@@ -23,7 +23,8 @@ class joint_trajectory_player:
         self.trajectory_file = rospy.get_param(namespace + "/trajectory_file")
         self.roslaunch = rospy.get_param(namespace + "/roslaunch", False)
 
-        self.client = actionlib.SimpleActionClient(self.action_server_ns, FollowJointTrajectoryAction)
+        self.client = actionlib.SimpleActionClient(
+            self.action_server_ns, FollowJointTrajectoryAction)
         self.client.wait_for_server()
 
     def handle_abort(self, signum, frame):
@@ -49,7 +50,8 @@ class joint_trajectory_player:
         except IOError:
             rospy.logerr("Could not open file. Aborting.")
             exit(1)
-        rospy.loginfo("Loaded trajectory with %i joints and %i data points.", len(joints), len(traj_points))
+        rospy.loginfo("Loaded trajectory with %i joints and %i data points.",
+                      len(joints), len(traj_points))
 
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = joints
