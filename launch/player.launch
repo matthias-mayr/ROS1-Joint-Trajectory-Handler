@@ -8,6 +8,7 @@
         <node name="joint_trajectory_player" pkg="joint_trajectory_handler" type="player.py" output="screen">
             <param name="trajectory_file" value="$(arg trajectory_file)"/>
             <param name="folder" value="$(arg folder)"/>
+            <param name="roslaunch" value="True"/>
         </node>
     </group>
 

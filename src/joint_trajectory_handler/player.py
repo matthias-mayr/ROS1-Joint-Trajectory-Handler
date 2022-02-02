@@ -21,6 +21,7 @@ class joint_trajectory_player:
         self.action_server_ns = rospy.get_param('player/action_server')
         self.folder = rospy.get_param(namespace + "/folder")
         self.trajectory_file = rospy.get_param(namespace + "/trajectory_file")
+        self.roslaunch = rospy.get_param(namespace + "/roslaunch", False)
 
         self.client = actionlib.SimpleActionClient(self.action_server_ns, FollowJointTrajectoryAction)
         self.client.wait_for_server()
@@ -71,13 +72,22 @@ class joint_trajectory_player:
         os.chdir(self.folder)
         for file in glob.glob("*.csv"):
             files.append(file)
+        rospy.loginfo("The folder contains %i files:", len(files))
         for it, file in enumerate(files):
-            rospy.loginfo("%i: %s", it, file)
-        response = input("Choose a file:")
-        if not response:
-            return files[-1]
+            if self.roslaunch:
+                rospy.loginfo("- %s/%s", self.folder, file)
+            else:
+                rospy.loginfo("%i: %s", it, file)
+        if not self.roslaunch:
+            response = input("Choose a file:")
+            if not response:
+                return files[-1]
+            else:
+                return files[int(response)]
         else:
-            return files[int(response)]
+            rospy.loginfo(
+                "Using a launch file does not allow interaction. Copy a filename and set 'trajectory_file'.")
+            exit(0)
 
 
 if __name__ == '__main__':
