@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="trajectory_file" default=""/>
+    <arg name="folder" default=""/>
+
+    <group ns="joint_trajectory_handler">
+        <rosparam file= "$(find joint_trajectory_handler)/config/joint_trajectory_handler.yaml" />
+        <node name="joint_trajectory_player" pkg="joint_trajectory_handler" type="player.py" output="screen">
+            <param name="trajectory_file" value="$(arg trajectory_file)"/>
+            <param name="folder" value="$(arg folder)"/>
+        </node>
+    </group>
+
+</launch>
