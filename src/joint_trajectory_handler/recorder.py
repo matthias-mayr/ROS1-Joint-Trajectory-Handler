@@ -2,6 +2,7 @@
 import copy
 import csv
 import signal
+import sys
 from datetime import datetime
 
 import rospy
@@ -9,8 +10,9 @@ from sensor_msgs.msg import JointState
 
 
 class joint_trajectory_recorder:
-    def __init__(self, suffix=""):
-        rospy.init_node('joint_state_recorder')
+    def __init__(self, namespace=""):
+        rospy.init_node('joint_trajectory_recorder')
+        namespace = namespace.split(":=")[-1]
         self.joint_states_topic = rospy.get_param('recorder/joint_states_topic')
         self.joints = rospy.get_param('recorder/joints')
         self.record_rate = rospy.get_param('recorder/record_rate')
@@ -19,7 +21,7 @@ class joint_trajectory_recorder:
         self.joint_state = [None] * len(self.joints)
         self.start_ros_time = 0
         self.start_wall_time = 0
-        self.suffix = suffix
+        self.filename_suffix = rospy.get_param(namespace + "/filename_suffix")
         self.recording = False
 
         # Subscribe to joint_states
@@ -38,16 +40,16 @@ class joint_trajectory_recorder:
             self.joint_state[self.joints.index(joint)] = js.position[index]
 
     def handle_abort(self, signum, frame):
-        rospy.loginfo("Aborted")
+        traj_name = "/tmp/" + self.start_wall_time.isoformat() + "_trajectory"
+        if len(self.filename_suffix):
+            traj_name += "_" + self.filename_suffix
+        traj_name += ".csv"
+
+        rospy.loginfo("Saving to file %s.", traj_name)
         self.recording = False
 
         fields = copy.deepcopy(self.joints)
         fields.append("time")
-
-        traj_name = "/tmp/" + self.start_wall_time.isoformat() + "_trajectory"
-        if len(self.suffix):
-            traj_name += suffix
-        traj_name += ".csv"
 
         with open(traj_name, "w") as f:
             write = csv.writer(f)
@@ -76,6 +78,6 @@ class joint_trajectory_recorder:
 
 
 if __name__ == '__main__':
-    recorder = joint_trajectory_recorder()
+    recorder = joint_trajectory_recorder(sys.argv[1])
     signal.signal(signal.SIGINT, recorder.handle_abort)
     recorder.record()
