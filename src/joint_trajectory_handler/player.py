@@ -81,7 +81,7 @@ class joint_trajectory_player:
             else:
                 rospy.loginfo("%i: %s", it, file)
         if not self.roslaunch:
-            response = input("Choose a file:")
+            response = input("Choose a file: ")
             if not response:
                 return files[-1]
             else:
