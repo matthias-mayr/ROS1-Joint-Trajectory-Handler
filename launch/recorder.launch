@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+<arg name="name_suffix" default=""/>
+
+<group ns="joint_trajectory_handler">
+    <rosparam file= "$(find joint_trajectory_handler)/config/joint_trajectory_handler.yaml" />
+    <node name="joint_trajectory_recorder" pkg="joint_trajectory_handler" type="recorder.py" output="screen">
+        <param name="name_suffix" value="$(arg name_suffix)"/>
+    </node>
+</group>
+
+</launch>

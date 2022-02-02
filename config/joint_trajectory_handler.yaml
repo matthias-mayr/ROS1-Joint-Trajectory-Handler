@@ -1,0 +1,15 @@
+
+recorder:
+  joint_states_topic: "/joint_states"
+  joints:             # joints to observe
+        - bh_joint_1
+        - bh_joint_2
+        - bh_joint_3
+        - bh_joint_4
+        - bh_joint_5
+        - bh_joint_6
+        - bh_joint_7
+  record_rate: 20     # in Hertz
+
+player:
+  action_server: /bh/CartesianImpedance_trajectory_controller/follow_joint_trajectory
