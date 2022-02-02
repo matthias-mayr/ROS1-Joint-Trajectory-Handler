@@ -1,15 +1,15 @@
 
 recorder:
   joint_states_topic: "/joint_states"
-  joints:             # joints to observe
-        - bh_joint_1
-        - bh_joint_2
-        - bh_joint_3
-        - bh_joint_4
-        - bh_joint_5
-        - bh_joint_6
-        - bh_joint_7
+  joints: # joints to observe
+        - iiwa_joint_1
+        - iiwa_joint_2
+        - iiwa_joint_3
+        - iiwa_joint_4
+        - iiwa_joint_5
+        - iiwa_joint_6
+        - iiwa_joint_7
   record_rate: 20     # in Hertz
 
 player:
-  action_server: /bh/CartesianImpedance_trajectory_controller/follow_joint_trajectory
+  action_server: /CartesianImpedance_trajectory_controller/follow_joint_trajectory
